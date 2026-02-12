@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  api_service:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_HOST=redis_service
+      - REDIS_PORT=6379
+      - RATE_LIMIT=5
+      - WINDOW_SIZE=60
+      - REFILL_RATE=0.1
+    depends_on:
+      - redis_service
+    networks:
+      - api_network
+
+  redis_service:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - api_network
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - api_network
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - api_network
+
+networks:
+  api_network:
+    driver: bridge
