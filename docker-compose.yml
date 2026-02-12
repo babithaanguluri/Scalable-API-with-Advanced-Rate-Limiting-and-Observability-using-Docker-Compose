@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  api_service:
+  api:
     build: .
     ports:
       - "8080:8080"

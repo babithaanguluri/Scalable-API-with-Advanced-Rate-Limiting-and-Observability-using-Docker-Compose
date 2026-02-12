@@ -50,7 +50,7 @@ The project includes a comprehensive test suite with unit and integration tests.
 ### Local Tests (Docker)
 To run the tests inside the containerized environment:
 ```bash
-docker-compose exec api_service pytest ./api/src/tests/test_unit.py ./api/src/tests/test_integration.py
+docker-compose exec api pytest ./api/src/tests/test_unit.py ./api/src/tests/test_integration.py
 ```
 
 ### Test Coverage
