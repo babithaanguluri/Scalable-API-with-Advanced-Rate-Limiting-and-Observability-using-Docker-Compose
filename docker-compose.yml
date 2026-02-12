@@ -13,6 +13,8 @@ services:
       - redis_service
     networks:
       - api_network
+    volumes:
+      - .:/app
 
   redis_service:
     image: redis:alpine

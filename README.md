@@ -19,13 +19,20 @@ This project demonstrates a production-ready API setup with:
 
 ## Rate Limiting (Token Bucket)
 
-The API implements a Token Bucket algorithm via Redis. 
-- **Capacity**: `RATE_LIMIT` (default: 5 tokens).
-- **Refill Rate**: `REFILL_RATE` (default: 0.1 tokens per second).
-- **Headers**:
-  - `X-RateLimit-Limit`: Maximum tokens.
-  - `X-RateLimit-Remaining`: Remaining tokens in the bucket.
-  - `X-RateLimit-Reset`: Estimated time when the bucket will be full.
+The API implements a custom **Token Bucket** algorithm using Redis for distributed state management. 
+
+### Why Token Bucket?
+We chose the Token Bucket algorithm because it provides a perfect balance between strict limits and flexibility. Unlike "Fixed Window" limiting, which can drop legitimate traffic at window boundaries, Token Bucket allows for:
+- **Bursts**: Clients can use multiple tokens quickly if they have them.
+- **Steady Refill**: Tokens are added at a consistent rate (`REFILL_RATE`), ensuring long-term fairness.
+- **Efficiency**: State is stored as a simple hash in Redis, making the check extremely fast (O(1)).
+
+### Configuration
+- **Capacity (`RATE_LIMIT`)**: `5 tokens`. This defines the maximum burst size.
+- **Refill Rate (`REFILL_RATE`)**: `0.1 tokens/sec`. This defines the long-term sustained throughput.
+
+### Headers
+...
 
 ## Getting Started
 
@@ -50,7 +57,7 @@ The project includes a comprehensive test suite with unit and integration tests.
 ### Local Tests (Docker)
 To run the tests inside the containerized environment:
 ```bash
-docker-compose exec api pytest ./api/src/tests/test_unit.py ./api/src/tests/test_integration.py
+docker-compose exec api pytest ./tests/test_unit.py ./tests/test_integration.py
 ```
 
 ### Test Coverage
