@@ -1,0 +1,37 @@
+### Health Check
+GET http://localhost:8080/api/status
+
+### Create a Product (Valid)
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Gaming Mouse",
+  "description": "RGB high-precision mouse",
+  "price": 59.99
+}
+
+### Create a Product (Invalid - String Price)
+# This will show the custom error message we implemented
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "Invalid Product",
+  "description": "Testing error handling",
+  "price": "number"
+}
+
+### Protected Action (Rate Limited)
+# Send this multiple times to see X-RateLimit headers change
+# After 5 requests, you will see a 429 error
+POST http://localhost:8080/api/protected-action
+Content-Type: application/json
+
+{
+    "action": "test_security",
+    "payload": "Checking rate limit headers"
+}
+
+### Metrics
+GET http://localhost:8080/metrics
